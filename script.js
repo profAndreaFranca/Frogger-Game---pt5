@@ -2,7 +2,6 @@
 var vidas = 3;
 var pontos = 0;
 var fase = 1;
-var travessiaFinalConcluida = false;
 
 // JOGADOR
 var jogador = createSprite(200, 365);
@@ -148,7 +147,7 @@ function movimentarTroncos() {
   }
 }
 
-// VERIFICAR COLISÕES
+// VERIFICAR COLISÕES COM VEÍCULOS
 function verificarColisoes() {
   if (
     jogador.isTouching(carro1) ||
@@ -164,7 +163,6 @@ function verificarColisoes() {
 function perderVida() {
   if (vidas > 0) {
     vidas = vidas - 1;
-
     jogador.x = 200;
     jogador.y = 365;
   }
@@ -317,70 +315,15 @@ function prepararFase3() {
   tronco3.velocityX = 3;
 }
 
-// VERIFICAR RIO
-function verificarRio() {
-  if (jogador.y < 145) {
-
-    if (jogador.isTouching(tronco1)) {
-      jogador.x = jogador.x + tronco1.velocityX;
-    }
-
-    else if (jogador.isTouching(tronco2)) {
-      jogador.x = jogador.x + tronco2.velocityX;
-    }
-
-    else if (jogador.isTouching(tronco3)) {
-      jogador.x = jogador.x + tronco3.velocityX;
-    }
-
-    else {
-      perderVida();
-    }
-
-    // Impede que o tronco carregue
-    // o jogador para fora da tela
-    if (jogador.x < 20) {
-      jogador.x = 20;
-    }
-
-    if (jogador.x > 380) {
-      jogador.x = 380;
-    }
-  }
-}
-
 // JOGAR FASE 3
 function jogarFase3() {
   background("blue");
 
-  if (travessiaFinalConcluida == false) {
-    moverJogador();
-
-    movimentarVeiculos();
-    movimentarTroncos();
-
-    verificarColisoes();
-
-    // Verifica a chegada antes do perigo
-    if (jogador.y < 20) {
-      pontos = pontos + 500;
-      travessiaFinalConcluida = true;
-    }
-
-    if (travessiaFinalConcluida == false) {
-      verificarRio();
-    }
-  }
+  moverJogador();
+  movimentarVeiculos();
+  movimentarTroncos();
+  verificarColisoes();
 
   drawSprites();
   mostrarInformacoes();
-
-  if (travessiaFinalConcluida == true) {
-    fill("yellow");
-    stroke("black");
-    strokeWeight(3);
-    textSize(20);
-    text("TRAVESSIA CONCLUIDA!", 75, 90);
-    noStroke();
-  }
 }
